@@ -1,15 +1,18 @@
 import { fetchCountries } from './service/api-service.js';
 import countryInfo from './tpl/country.hbs';
+import debounce from 'lodash.debounce';
+import { alert, notice, info, success, error, defaultModules } from '@pnotify/core';
 
 console.log(countryInfo);
 
 const inputRef = document.querySelector('[name="country"]');
 const result = document.querySelector('.result');
 
-inputRef.addEventListener('input', _.debounce(searchCountries, 500));
+inputRef.addEventListener('input', debounce(searchCountries, 500));
 
 function searchCountries(e) {
   const searchWord = e.target.value.trim();
+  result.innerHTML = '';
   console.log(searchWord);
   if (!searchWord) {
     return;
@@ -20,15 +23,19 @@ function searchCountries(e) {
 
 function renderCountries(countries) {
   if (countries.length === 1) {
-    result.insertAdjacentHTML('afterbegin', countryInfo(countries));
+    result.innerHTML = countryInfo(countries);
   } else if (countries.length > 1 && countries.length <= 10) {
-    const counrtyList = results.map(country => {
-      return `<li><p>${country}</p></li>`;
-    });
-    result.insertAdjacentHTML('beforeend', counrtyList.join(''));
+    const countryList = results
+      .map(country => {
+        country = country.name;
+
+        return `<ul><li><p>${country}</p></li></ul>`;
+      })
+      .join('');
+    result.innerHTML = countryList;
   } else if (countries.length > 10) {
     error({
-      text: 'Notice me, senpai!',
+      text: 'Данные отсутствуют или неверный формат ввода!',
     });
 
     console.log(countries);
