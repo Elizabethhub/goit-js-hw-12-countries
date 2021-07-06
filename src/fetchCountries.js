@@ -25,11 +25,9 @@ function renderCountries(countries) {
   if (countries.length === 1) {
     result.innerHTML = countryInfo(countries);
   } else if (countries.length > 1 && countries.length <= 10) {
-    const countryList = results
+    const countryList = countries
       .map(country => {
-        country = country.name;
-
-        return `<ul><li><p>${country}</p></li></ul>`;
+        return `<p>${country.name}</p>`;
       })
       .join('');
     result.innerHTML = countryList;
